@@ -1,8 +1,10 @@
-
+import CameraMoodDetector from "../components/CameraMoodDetector";
 import { useState, useEffect } from "react";
 import GlassCard from "../components/GlassCard";
 
 const moods = ["Calm", "Happy", "Stressed", "Tired"];
+
+
 
 const moodColors = {
   Calm: "bg-calm/40",
@@ -12,12 +14,26 @@ const moodColors = {
 };
 
 export default function Home() {
-    const [mood,setMood] = useState("");
+    const [mood, setMood] = useState("Detecting...");
+
 
     useEffect(() => {
-        const randomMood = moods[Math.floor(Math.random() * moods.length)];
-        setMood(randomMood);
+        <CameraMoodDetector onMoodDetected={setMood} />
     }, []); 
+
+    function suggestOutfit(mood) {
+      if (mood === "Calm") return "Soft neutral layers";
+      if (mood === "Happy") return "Bright casual wear";
+      if (mood === "Stressed") return "Comfort hoodie & joggers";
+      if (mood === "Tired") return "Loose cozy outfit";
+    }
+
+    function mirrorMessage(mood) {
+      if (mood === "Calm") return "Move gently today.";
+      if (mood === "Happy") return "Carry that energy forward!";
+      if (mood === "Stressed") return "Breathe. You’re doing fine.";
+      if (mood === "Tired") return "Go easy on yourself today.";
+    }
 
 
   return (
@@ -47,9 +63,4 @@ export default function Home() {
   );
 }
 
-function suggestOutfit(mood) {
-  if (mood === "Calm") return "Soft neutral layers";
-  if (mood === "Happy") return "Bright casual wear";
-  if (mood === "Stressed") return "Comfort hoodie & joggers";
-  if (mood === "Tired") return "Loose cozy outfit";
-}
+
