@@ -28,19 +28,20 @@ export default function CameraMoodDetector({ onMoodDetected }) {
   };
 
   const detectMood = async () => {
-    const detections = await faceapi
-      .detectSingleFace(videoRef.current, new faceapi.TinyFaceDetectorOptions())
-      .withFaceExpressions();
+    // Ensure the video is ready and models are loaded
+    if (videoRef.current && videoRef.current.readyState === 4 && !loading) {
+      const detections = await faceapi
+        .detectSingleFace(videoRef.current, new faceapi.TinyFaceDetectorOptions())
+        .withFaceExpressions();
 
-    if (detections) {
-      const expressions = detections.expressions;
-      const mood = Object.keys(expressions).reduce((a, b) =>
-        expressions[a] > expressions[b] ? a : b
-      );
-      console.log("Detected Expressions:", expressions); // 👈 debug
-        console.log("Mapped Mood:", mood);                 // 👈 debug
-
-      onMoodDetected(mood);
+      if (detections) {
+        const expressions = detections.expressions;
+        // Get the mood with the highest confidence score
+        const mood = Object.keys(expressions).reduce((a, b) =>
+          expressions[a] > expressions[b] ? a : b
+        );
+        onMoodDetected(mood);
+      }
     }
   };
 
